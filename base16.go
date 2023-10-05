@@ -2,12 +2,12 @@ package main
 
 import (
 	"bytes"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
-	"encoding/hex"
 )
 
 var (
@@ -33,11 +33,9 @@ func main() {
 		inputData = strings.TrimSuffix(inputData, "\n")
 
 		if *dump {
-			// Hex dump
 			encoded := hex.Dump([]byte(inputData))
 			fmt.Println(encoded)
 		} else if *dec {
-			// Decodificar a partir do hexadecimal
 			decoded, err := hex.DecodeString(inputData)
 			if err != nil {
 				fmt.Println("Error decoding from hexadecimal:", err)
@@ -45,7 +43,6 @@ func main() {
 			}
 			fmt.Println(string(decoded))
 		} else {
-			// Codificar para hexadecimal
 			encoded := hex.EncodeToString([]byte(inputData))
 			fmt.Println(encoded)
 		}
@@ -71,11 +68,9 @@ func main() {
 
 		if *col != 0 {
 			if *dump {
-				// Hex dump
 				encoded := hex.Dump([]byte(inputData))
 				fmt.Println(encoded)
 			} else if *dec {
-				// Decodificar a partir do hexadecimal
 				var decoded []byte
 				var err error
 				if !isHexDump(inputData) {
@@ -91,7 +86,6 @@ func main() {
 				}
 				fmt.Println(string(decoded))
 			} else {
-				// Codificar para hexadecimal e dividir em colunas
 				encoded := hex.EncodeToString([]byte(inputData))
 				for _, chunk := range split(encoded, *col) {
 					fmt.Println(chunk)
@@ -99,7 +93,6 @@ func main() {
 			}
 		} else {
 			if *dec {
-				// Decodificar a partir do hexadecimal
 				decoded, err := hex.DecodeString(inputData)
 				if err != nil {
 					fmt.Println("Error decoding from hexadecimal:", err)
@@ -107,7 +100,6 @@ func main() {
 				}
 				fmt.Println(string(decoded))
 			} else {
-				// Codificar para hexadecimal
 				encoded := hex.EncodeToString([]byte(inputData))
 				fmt.Println(encoded)
 			}
@@ -130,27 +122,20 @@ func decodeHexDump(input string) ([]byte, error) {
 	var decoded []byte
 	var buffer bytes.Buffer
 
-	// Split the lines of the hexdump
 	lines := strings.Split(input, "\n")
 
-	// Iterate through the lines and collect hexadecimal characters
 	for _, line := range lines {
-		// Ignore lines with less than 59 characters
 		if len(line) < 59 {
 			continue
 		}
 
-		// Extract characters from column 10 to 58
 		hexCharsInLine := line[9:58]
 
-		// Remove spaces
 		hexCharsInLine = strings.ReplaceAll(hexCharsInLine, " ", "")
 
-		// Append cleaned hex characters to the buffer
 		buffer.WriteString(hexCharsInLine)
 	}
 
-	// Decode the filtered hexadecimal characters
 	decoded, err := hex.DecodeString(buffer.String())
 	if err != nil {
 		return nil, err
