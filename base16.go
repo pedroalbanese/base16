@@ -34,7 +34,7 @@ func main() {
 
 		if *dump {
 			encoded := hex.Dump([]byte(inputData))
-			fmt.Println(encoded)
+			fmt.Print(encoded)
 		} else if *dec {
 			decoded, err := hex.DecodeString(inputData)
 			if err != nil {
@@ -69,7 +69,7 @@ func main() {
 		if *col != 0 {
 			if *dump {
 				encoded := hex.Dump([]byte(inputData))
-				fmt.Println(encoded)
+				fmt.Print(encoded)
 			} else if *dec {
 				var decoded []byte
 				var err error
@@ -130,9 +130,7 @@ func decodeHexDump(input string) ([]byte, error) {
 		}
 
 		hexCharsInLine := line[9:58]
-
 		hexCharsInLine = strings.ReplaceAll(hexCharsInLine, " ", "")
-
 		buffer.WriteString(hexCharsInLine)
 	}
 
